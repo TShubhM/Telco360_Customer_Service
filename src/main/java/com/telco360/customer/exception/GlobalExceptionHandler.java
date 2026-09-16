@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleCustomerNotFound(CustomerNotFoundException ex,
-                                                                   HttpServletRequest request){
+                                                                   HttpServletRequest request) {
         ApiErrorResponse response = new ApiErrorResponse();
 
         response.setTimestamp(LocalDateTime.now());
@@ -77,6 +78,31 @@ public class GlobalExceptionHandler {
         response.setMessage(ex.getMessage());
         response.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidRequestException(InvalidRequestException ex,
+                                                                          HttpServletRequest request) {
+        ApiErrorResponse response = new ApiErrorResponse();
+        response.setTimestamp(LocalDateTime.now());
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setError("Bad Request");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ApiErrorResponse> handleOptimisticLocking(ObjectOptimisticLockingFailureException ex,
+                                                                    HttpServletRequest request) {
+        ApiErrorResponse response = new ApiErrorResponse();
+
+        response.setTimestamp(LocalDateTime.now());
+        response.setStatus(HttpStatus.CONFLICT.value());
+        response.setError("Conflict");
+        response.setMessage("Customer was modified by another request. Please fetch the latest data and try again.");
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 }
 

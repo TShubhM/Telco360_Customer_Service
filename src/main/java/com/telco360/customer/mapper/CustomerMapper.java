@@ -1,6 +1,7 @@
 package com.telco360.customer.mapper;
 
 import com.telco360.customer.dto.request.CustomerRequest;
+import com.telco360.customer.dto.request.CustomerUpdateRequest;
 import com.telco360.customer.dto.response.CustomerResponse;
 import com.telco360.customer.entity.Customer;
 import org.springframework.stereotype.Component;
@@ -31,5 +32,13 @@ public class CustomerMapper {
         response.setStatus(customer.getStatus());
         response.setCustomerNumber(customer.getCustomerNumber());
         return response;
+    }
+
+    public void updateEntity(Customer customer, CustomerUpdateRequest request){
+        customer.setFirstName(request.getFirstName());
+        customer.setLastName(request.getLastName());
+        customer.setEmail(request.getEmail());
+        customer.setMobileNumber(request.getMobileNumber());
+        customer.setDateOfBirth(request.getDateOfBirth());
     }
 }

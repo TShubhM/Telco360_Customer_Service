@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CustomerRepo extends JpaRepository<Customer, Long> {
     boolean existsByEmail(String email);
     boolean existsByMobileNumber(String mobileNumber);
+    boolean existsByEmailAndIdNot(String email, Long id); //find this email but ignore the customer currently being updated
+    boolean existsByMobileNumberAndIdNot(String mobileNumber, Long id);
 }

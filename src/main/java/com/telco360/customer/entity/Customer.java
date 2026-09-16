@@ -1,8 +1,11 @@
 package com.telco360.customer.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "customer")
@@ -26,6 +29,17 @@ public class Customer {
     @Column(name = "customer_number",
             nullable = false, unique = true)
     private String customerNumber;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Version
+    private Long version;
 
     public String getCustomerNumber() {
         return customerNumber;
